@@ -1,0 +1,32 @@
+services:
+  # DB
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: itbook-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Dev123456
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Dev123456' -C -Q 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Backend
+  api:
+    build: .
+    container_name: itbook-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JWT_KEY=secret123456secret123456secret123456secret123456
+      - JWT_ISSUER=itbook-api
+      - JWT_AUDIENCE=itbook-app
+      - ITBOOK_API_URL=https://api.itbook.store/1.0
+      - DB_CONNECTION=Server=db;Database=itbook;User Id=sa;Password=Dev123456;TrustServerCertificate=True;
+    depends_on:
+      db:
+        condition: service_healthy
