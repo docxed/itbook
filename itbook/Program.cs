@@ -114,4 +114,5 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
+// run
 app.Run();
