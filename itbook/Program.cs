@@ -102,7 +102,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 
-// Authentication 1
+// Authentication
 app.UseAuthentication();
 app.UseAuthorization();
 
